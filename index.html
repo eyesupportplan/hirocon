@@ -87,52 +87,28 @@ body::before {
 </style>
 
 <script>
-// 設定データ
+// 共通設定
 const config = {
   to: "customer-desk@hirocon-net.co.jp",
   subject: "eyeサポテストメール",
   body: "レンズを使用される方のお名前（漢字）\n⇒\n\nこちらはメールアドレス確認用のメールでございます。\nお名前をご入力いただき、そのまま送信をお願いいたします。"
 };
 
-// URLエンコード用
 const s = encodeURIComponent(config.subject);
 const b = encodeURIComponent(config.body);
 
-function openGmail() {
-  const app = `googlegmail://co?to=${config.to}&subject=${s}&body=${b}`;
-  const web = `https://mail.google.com/mail/?view=cm&fs=1&to=${config.to}&su=${s}&body=${b}`;
+// 各メールサービスへのリンク生成
+const mailLinks = {
+  default: `mailto:${config.to}?subject=${s}&body=${b}`,
+  gmail: `https://mail.google.com/mail/?view=cm&fs=1&to=${config.to}&su=${s}&body=${b}`,
+  yahoo: `https://compose.mail.yahoo.co.jp/?to=${config.to}&ss=${s}&body=${b}`,
+  outlook: `https://outlook.live.com/mail/0/deeplink/compose?to=${config.to}&subject=${s}&body=${b}`
+};
 
-  window.location.href = app;
-  setTimeout(() => { window.location.href = web; }, 1000);
-}
-
-function openYahoo() {
-  const app = `yjmail://compose?to=${config.to}&subject=${s}&body=${b}`;
-  const web = `https://compose.mail.yahoo.co.jp/?to=${config.to}&ss=${s}&body=${b}`;
-
-  window.location.href = app;
-  const start = Date.now();
-  setTimeout(() => {
-    if (Date.now() - start < 2000) {
-      window.location.href = web;
-    }
-  }, 1500);
-}
-
-function openOutlook() {
-  // Outlook アプリ用URLスキーム
-  const app = `ms-outlook://compose?to=${config.to}&subject=${s}&body=${b}`;
-  // Web版URL
-  const web = `https://outlook.live.com/mail/0/deeplink/compose?to=${config.to}&subject=${s}&body=${b}`;
-
-  window.location.href = app;
-  const start = Date.now();
-  setTimeout(() => {
-    // 1.5秒後に画面が遷移していなければWeb版へ
-    if (Date.now() - start < 2000) {
-      window.location.href = web;
-    }
-  }, 1500);
+function openMail(type) {
+  // アドレス無効エラーを避けるため、基本はWebベースのURLを開く
+  // モバイル端末であれば、各アプリが自動的にハンドリングする場合が多いです
+  window.open(mailLinks[type] || mailLinks.default, '_blank');
 }
 </script>
 
@@ -146,19 +122,20 @@ function openOutlook() {
 
   <div class="section-title">メールアプリ</div>
 
+  <!-- 標準的なmailtoは最も安定しているためそのまま保持 -->
   <a class="btn" href="mailto:customer-desk@hirocon-net.co.jp?subject=eyeサポテストメール&body=レンズを使用される方のお名前（漢字）%0A⇒%0A%0Aこちらはメールアドレス確認用のメールでございます。%0Aお名前をご入力いただき、そのまま送信をお願いいたします。">
     iPhone純正メール <span class="arrow">›</span>
   </a>
 
-  <div class="btn" onclick="openGmail()">
+  <div class="btn" onclick="openMail('gmail')">
     Gmail <span class="arrow">›</span>
   </div>
 
-  <div class="btn" onclick="openYahoo()">
+  <div class="btn" onclick="openMail('yahoo')">
     Yahoo!メール <span class="arrow">›</span>
   </div>
 
-  <div class="btn" onclick="openOutlook()">
+  <div class="btn" onclick="openMail('outlook')">
     Outlook <span class="arrow">›</span>
   </div>
 
@@ -177,7 +154,7 @@ function openOutlook() {
   </a>
 
   <div class="note">
-    メールを作成いたします。件名・本文はあらかじめ入力されております。<br>
+    件名・本文はあらかじめ入力されております。<br>
     お名前をご入力のうえ、そのまま送信をお願いいたします。
   </div>
 
