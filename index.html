@@ -36,55 +36,45 @@ body::before {
   text-align: center;
 }
 
-/* タイトル */
 .title {
   font-size: 24px;
   color: #4a2f1a;
-  margin-bottom: 10px;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
 }
 
-/* サブ説明 */
-.subtitle {
+.section-title {
   font-size: 13px;
   color: #7a5a3a;
-  margin-bottom: 20px;
+  margin: 18px 0 8px;
 }
 
-/* メインボタン（超重要） */
-.main-btn {
-  display: block;
-  margin: 18px 0;
-  padding: 20px;
-  border-radius: 16px;
-  text-decoration: none;
-  font-size: 18px;
-  font-weight: bold;
-  color: white;
-  background: linear-gradient(135deg, #b9935a, #8c6a3d);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-}
-
-/* 補助ボタン */
 .btn {
-  display: block;
-  margin: 8px 0;
-  padding: 12px;
-  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+  padding: 14px;
+  border-radius: 12px;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 15px;
   color: #3b2a1e;
-  background: #f3e2cf;
+  background: linear-gradient(145deg, #fff8f0, #e9d7c2);
+  box-shadow: 5px 5px 12px rgba(0,0,0,0.25),
+              -3px -3px 8px rgba(255,255,255,0.8);
 }
 
-/* 補足 */
+.arrow {
+  opacity: 0.5;
+}
+
 .note {
-  margin-top: 15px;
+  margin-top: 18px;
   font-size: 12px;
   color: #4a2f1a;
   line-height: 1.6;
 }
 
-/* 署名 */
 .signature {
   position: fixed;
   bottom: 18px;
@@ -93,38 +83,91 @@ body::before {
   font-size: 13px;
 }
 </style>
+
+<script>
+// 共通のメール設定
+const mailTo = "customer-desk@hirocon-net.co.jp";
+const mailSubject = "eyeサポテストメール";
+const mailBody = "レンズを使用される方のお名前（漢字）\n⇒\n\nこちらはメールアドレス確認用のメールでございます。\nお名前をご入力いただき、そのまま送信をお願いいたします。";
+
+function openGmail() {
+  const subjectEnc = encodeURIComponent(mailSubject);
+  const bodyEnc = encodeURIComponent(mailBody);
+  
+  const app = `googlegmail://co?to=${mailTo}&subject=${subjectEnc}&body=${bodyEnc}`;
+  const web = `https://mail.google.com/mail/?view=cm&fs=1&to=${mailTo}&su=${subjectEnc}&body=${bodyEnc}`;
+
+  window.location.href = app;
+  setTimeout(() => {
+    window.location.href = web;
+  }, 1000);
+}
+
+function openYahoo() {
+  const subjectEnc = encodeURIComponent(mailSubject);
+  const bodyEnc = encodeURIComponent(mailBody);
+
+  // 日本のYahoo!メールアプリ用スキームは yjmail://
+  const app = `yjmail://compose?to=${mailTo}&subject=${subjectEnc}&body=${bodyEnc}`;
+  // ブラウザ版URL (ssは件名パラメータ)
+  const web = `https://compose.mail.yahoo.co.jp/?to=${mailTo}&ss=${subjectEnc}&body=${bodyEnc}`;
+
+  window.location.href = app;
+  
+  // アプリが開かなかった場合の判定
+  const start = Date.now();
+  setTimeout(() => {
+    if (Date.now() - start < 2000) {
+      window.location.href = web;
+    }
+  }, 1500);
+}
+</script>
+
 </head>
 
 <body>
 
 <div class="container">
 
-  <div class="title">メール確認</div>
-  <div class="subtitle">下のボタンを押して、そのまま送信してください</div>
+  <div class="title">eyeサポテストメール</div>
 
-  <!-- ★これだけ押せばOK -->
-  <a class="main-btn" href="mailto:customer-desk@hirocon-net.co.jp?subject=eyeサポテストメール&body=レンズを使用される方のお名前（漢字）%0A⇒%0A%0Aこちらはメールアドレス確認用のメールでございます。%0Aお名前をご入力いただき、そのまま送信をお願いいたします。">
-    メールを送る
+  <div class="section-title">メールアプリ</div>
+
+  <a class="btn" href="mailto:customer-desk@hirocon-net.co.jp?subject=eyeサポテストメール&body=レンズを使用される方のお名前（漢字）%0A⇒%0A%0Aこちらはメールアドレス確認用のメールでございます。%0Aお名前をご入力いただき、そのまま送信をお願いいたします。">
+    iPhone純正メール <span class="arrow">›</span>
   </a>
 
-  <div class="note">
-    ※通常はこちらのボタンのみご利用ください
-  </div>
-
-  <!-- うまくいかない場合 -->
-  <div class="subtitle" style="margin-top:20px;">うまく開かない場合はこちら</div>
-
-  <a class="btn" href="https://mail.google.com/mail/?view=cm&fs=1&to=customer-desk@hirocon-net.co.jp&su=eyeサポテストメール&body=レンズを使用される方のお名前（漢字）%0A⇒%0A%0Aこちらはメールアドレス確認用のメールでございます。%0Aお名前をご入力いただき、そのまま送信をお願いいたします。" target="_blank">
-    Gmail
+  <a class="btn" href="javascript:void(0)" onclick="openGmail()">
+    Gmail <span class="arrow">›</span>
   </a>
 
-  <a class="btn" href="https://compose.mail.yahoo.co.jp/?to=customer-desk@hirocon-net.co.jp&subject=eyeサポテストメール&body=レンズを使用される方のお名前（漢字）%0A⇒%0A%0Aこちらはメールアドレス確認用のメールでございます。%0Aお名前をご入力いただき、そのまま送信をお願いいたします。" target="_blank">
-    Yahooメール（ブラウザ）
+  <a class="btn" href="javascript:void(0)" onclick="openYahoo()">
+    Yahoo!メール <span class="arrow">›</span>
   </a>
 
   <a class="btn" href="https://outlook.live.com/mail/0/deeplink/compose?to=customer-desk@hirocon-net.co.jp&subject=eyeサポテストメール&body=レンズを使用される方のお名前（漢字）%0A⇒%0A%0Aこちらはメールアドレス確認用のメールでございます。%0Aお名前をご入力いただき、そのまま送信をお願いいたします。" target="_blank">
-    Outlook
+    Outlook <span class="arrow">›</span>
   </a>
+
+  <div class="section-title">キャリアメール</div>
+
+  <a class="btn" href="mailto:customer-desk@hirocon-net.co.jp?subject=eyeサポテストメール&body=レンズを使用される方のお名前（漢字）%0A⇒%0A%0Aこちらはメールアドレス確認用のメールでございます。%0Aお名前をご入力いただき、そのまま送信をお願いいたします。">
+    ドコモメール <span class="arrow">›</span>
+  </a>
+
+  <a class="btn" href="mailto:customer-desk@hirocon-net.co.jp?subject=eyeサポテストメール&body=レンズを使用される方のお名前（漢字）%0A⇒%0A%0Aこちらはメールアドレス確認用のメールでございます。%0Aお名前をご入力いただき、そのまま送信をお願いいたします。">
+    auメール <span class="arrow">›</span>
+  </a>
+
+  <a class="btn" href="mailto:customer-desk@hirocon-net.co.jp?subject=eyeサポテストメール&body=レンズを使用される方のお名前（漢字）%0A⇒%0A%0Aこちらはメールアドレス確認用のメールでございます。%0Aお名前をご入力いただき、そのまま送信をお願いいたします。">
+    ソフトバンクメール <span class="arrow">›</span>
+  </a>
+
+  <div class="note">
+    メールを作成いたします。件名・本文はあらかじめ入力されております。<br>
+    お名前をご入力のうえ、そのまま送信をお願いいたします。
+  </div>
 
 </div>
 
