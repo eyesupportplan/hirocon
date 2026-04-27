@@ -63,6 +63,7 @@ body::before {
   box-shadow: 5px 5px 12px rgba(0,0,0,0.25),
               -3px -3px 8px rgba(255,255,255,0.8);
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .arrow {
@@ -93,10 +94,11 @@ const config = {
   body: "レンズを使用される方のお名前（漢字）\n⇒\n\nこちらはメールアドレス確認用のメールでございます。\nお名前をご入力いただき、そのまま送信をお願いいたします。"
 };
 
+// URLエンコード用
+const s = encodeURIComponent(config.subject);
+const b = encodeURIComponent(config.body);
+
 function openGmail() {
-  const s = encodeURIComponent(config.subject);
-  const b = encodeURIComponent(config.body);
-  
   const app = `googlegmail://co?to=${config.to}&subject=${s}&body=${b}`;
   const web = `https://mail.google.com/mail/?view=cm&fs=1&to=${config.to}&su=${s}&body=${b}`;
 
@@ -105,19 +107,28 @@ function openGmail() {
 }
 
 function openYahoo() {
-  const s = encodeURIComponent(config.subject);
-  const b = encodeURIComponent(config.body);
-
-  // 日本版Yahoo!メールアプリの起動スキーム yjmail://
   const app = `yjmail://compose?to=${config.to}&subject=${s}&body=${b}`;
-  // ブラウザ版URL
   const web = `https://compose.mail.yahoo.co.jp/?to=${config.to}&ss=${s}&body=${b}`;
 
   window.location.href = app;
-  
   const start = Date.now();
   setTimeout(() => {
-    // 1.5秒経っても画面が切り替わっていない場合にWeb版へ
+    if (Date.now() - start < 2000) {
+      window.location.href = web;
+    }
+  }, 1500);
+}
+
+function openOutlook() {
+  // Outlook アプリ用URLスキーム
+  const app = `ms-outlook://compose?to=${config.to}&subject=${s}&body=${b}`;
+  // Web版URL
+  const web = `https://outlook.live.com/mail/0/deeplink/compose?to=${config.to}&subject=${s}&body=${b}`;
+
+  window.location.href = app;
+  const start = Date.now();
+  setTimeout(() => {
+    // 1.5秒後に画面が遷移していなければWeb版へ
     if (Date.now() - start < 2000) {
       window.location.href = web;
     }
@@ -147,9 +158,9 @@ function openYahoo() {
     Yahoo!メール <span class="arrow">›</span>
   </div>
 
-  <a class="btn" href="https://outlook.live.com/mail/0/deeplink/compose?to=customer-desk@hirocon-net.co.jp&subject=eyeサポテストメール&body=レンズを使用される方のお名前（漢字）%0A⇒%0A%0Aこちらはメールアドレス確認用のメールでございます。%0Aお名前をご入力いただき、そのまま送信をお願いいたします。" target="_blank">
+  <div class="btn" onclick="openOutlook()">
     Outlook <span class="arrow">›</span>
-  </a>
+  </div>
 
   <div class="section-title">キャリアメール</div>
 
